@@ -2,10 +2,10 @@
 function openDb(): object {
   $ini = parse_ini_file("../verkkopalveluprojekti/config.ini", true);
 
-  $host = $ini["host"];
-  $database = $ini["database"];
-  $user = $ini["user"];
-  $password = $ini["password"];
+  $host = $ini["localhost"];
+  $database = $ini["webshop"];
+  $user = $ini["root"];
+  $password = $ini["root"];
   $db = new PDO("mysql:host=$host;dbname=$database;charset=utf8",$user,$password);
   $db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
   return $db;
