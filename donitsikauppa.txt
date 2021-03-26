@@ -1,0 +1,167 @@
+/* Taulut */
+
+CREATE TABLE asiakas (
+asiakasID SMALLINT AUTO_INCREMENT,
+snimi CHAR(30) NOT NULL,
+enimi CHAR(30) NOT NULL,
+postinro CHAR(5), 
+postitmp CHAR(10), 
+puhnro INT,
+PRIMARY KEY (asiakasID),
+UNIQUE (snimi),
+UNIQUE (enimi)
+);
+
+
+CREATE TABLE tilaus (
+tilausnro INTEGER NOT NULL,
+asiakasID CHAR(6) NOT NULL, 
+tilauspvm timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+tila CHAR(1),
+PRIMARY KEY (tilausnro),
+FOREIGN KEY (asiakasID) REFERENCES asiakas(asiakasID)
+);
+
+
+CREATE TABLE tuoteryhma (
+trnro SMALLINT,
+trnimi CHAR(25),
+CONSTRAINT tuoteryhma_pk PRIMARY KEY (trnro)
+) ;
+
+
+CREATE TABLE tuote (
+tuotenro INTEGER,
+tuotenimi CHAR(30) NOT NULL,
+hinta DECIMAL(5,2),
+kustannus DECIMAL(5,2), 
+trnro SMALLINT NOT NULL,
+maku char(20),
+taytemaku char(20),
+kuva char(20),
+CONSTRAINT tuote_pk PRIMARY KEY (tuotenro),
+CONSTRAINT tuote_ryhma_fk FOREIGN KEY (trnro) 
+           REFERENCES tuoteryhma (trnro)
+);
+
+
+CREATE TABLE setti (
+setin_nimi char(30) NOT NULL,
+tuotenro integer NOT NULL,
+tuote1 integer NOT NULL,
+tuote2 integer NOT NULL,
+tuote3 integer NOT NULL,
+FOREIGN KEY(tuotenro) REFERENCES tuote(tuotenro),
+FOREIGN KEY(tuote1) REFERENCES tuote(tuotenro),
+FOREIGN KEY(tuote2) REFERENCES tuote(tuotenro),
+FOREIGN KEY(tuote3) REFERENCES tuote(tuotenro)
+);
+
+
+CREATE TABLE tilausrivi (
+tilausnro INTEGER NOT NULL,
+rivinro SMALLINT NOT NULL,
+tuotenro INTEGER, 
+kpl INTEGER,
+CONSTRAINT tilausrivi_pk PRIMARY KEY (tilausnro, rivinro),
+CONSTRAINT tilausrivi_tuote_fk FOREIGN KEY (tuotenro) 
+           REFERENCES tuote (tuotenro)
+);
+
+
+/* INSERT luontilauseet */
+
+
+INSERT INTO tuoteryhma VALUES (1, 'Virvokkeet');
+INSERT INTO tuoteryhma VALUES (2, 'Pikkudonitsit');
+INSERT INTO tuoteryhma VALUES (3, 'Donitsit');
+INSERT INTO tuoteryhma VALUES (4, 'Donitsisetit');
+INSERT INTO tuoteryhma VALUES (5, 'Täytetyt donitsit');
+INSERT INTO tuoteryhma VALUES (6, 'Muut leivonnaiset');
+
+
+
+INSERT INTO tuote VALUES (1, 'kahvi', 4.90, 2.90, 1, 'vaalea', NULL, NULL,);
+INSERT INTO tuote VALUES (2, 'kahvi', 4.90, 2.90, 1, 'tumma', NULL, NULL);
+INSERT INTO tuote VALUES (3, 'tee', 4.90, 2.90, 1, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (4, 'limppari', 5.90, 2.90, 1, 'pepsi', NULL, NULL);
+INSERT INTO tuote VALUES (5, 'limppari', 5.90, 2.90, 1, 'jaffa', NULL, NULL);
+INSERT INTO tuote VALUES (6, 'vesi', 2.90, 1, 1, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (7, 'mehu', 3.90, 1.90, 1, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (8, 'mehu', 3.90, 1.90, 1, 'päärynä', NULL, NULL);
+
+INSERT INTO tuote VALUES (9, 'kinuski_pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (10, 'suklaa_pikkudonitsi', 2.50, 1, 2, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (11, 'mansikka_pikkudonitsi', 2.50, 1, 2, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (12, 'tummaSuklaa_pikkudonitsi', 2.50, 1, 2, 'tumma suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (13, 'valkosuklaa_pikkudonitsi', 2.50, 1, 2, 'valkosuklaa', NULL, NULL);
+INSERT INTO tuote VALUES (14, 'lakritsi_pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (15, 'hasselpähkinä_pikkudonitsi', 2.50, 1, 2, 'hasselpähkinä', NULL, NULL);
+INSERT INTO tuote VALUES (16, 'salmiakki_pikkudonitsi', 2.50, 1, 2, 'salmiakki', NULL, NULL);
+INSERT INTO tuote VALUES (17, 'vanilja_pikkudonitsi', 2.50, 1, 2, 'vanilja', NULL, NULL);
+INSERT INTO tuote VALUES (18, 'vihreäKuula_pikkudonitsi', 2.50, 1, 2, 'vihreä kuula', NULL, NULL);
+INSERT INTO tuote VALUES (19, 'kahvi_pikkudonitsi', 2.50, 1, 2, 'kahvi', NULL, NULL);
+
+INSERT INTO tuote VALUES (20, 'kinuskidonitsi', 3.50, 1.50, 3, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (21, 'suklaadonitsi', 3.50, 1.50, 3, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (22, 'mansikkadonitsi', 3.50, 1.50, 3, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (23, 'tummaSuklaadonitsi', 3.50, 1.50, 3, 'tumma suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (24, 'valkosuklaadonitsi', 3.50, 1.50, 3, 'valkosuklaa', NULL, NULL);
+INSERT INTO tuote VALUES (25, 'lakritsidonitsi', 3.50, 1.50, 3, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (26, 'hasselpähkinädonitsi', 3.50, 1.50, 3, 'hasselpähkinä', NULL, NULL);
+INSERT INTO tuote VALUES (27, 'salmiakkidonitsi', 3.50, 1.50, 3, 'salmiakki', NULL, NULL);
+INSERT INTO tuote VALUES (28, 'vaniljadonitsi', 3.50, 1.50, 3, 'vanilja', NULL, NULL);
+INSERT INTO tuote VALUES (29, 'vihreäKuuladonitsi', 3.50, 1.50, 3, 'vihreä kuula', NULL, NULL);
+INSERT INTO tuote VALUES (30, 'kahvidonitsi', 3.50, 1.50, 3, 'kahvi', NULL, NULL);
+
+INSERT INTO tuote VALUES (31, 'kinuskidonitsi', 4.50, 2.50, 5, 'kinuski', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (32, 'suklaadonitsi', 4.50, 2.50, 5, 'suklaa', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (33, 'mansikkadonitsi', 4.50, 2.50, 5, 'mansikka', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (34, 'tummaSuklaadonitsi', 4.50, 2.50, 5, 'tumma suklaa', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (35, 'valkosuklaadonitsi', 4.50, 2.50, 5, 'valkosuklaa', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (36, 'lakritsidonitsi', 4.50, 2.50, 5, 'kinuski', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (37, 'hasselpähkinädonitsi', 4.50, 2.50, 5, 'hasselpähkinä', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (38, 'salmiakkidonitsi', 4.50, 2.50, 5, 'salmiakki', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (39, 'vaniljadonitsi', 4.50, 2.50, 5, 'vanilja', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (40, 'vihreäKuuladonitsi', 4.50, 2.50, 5, 'vihreä kuula', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (41, 'kahvidonitsi', 4.50, 2.50, 5, 'kahvi', 'vaniljakreemi', NULL);
+
+INSERT INTO tuote VALUES (42, 'kinuskidonitsi', 4.50, 2.50, 5, 'kinuski', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (43, 'suklaadonitsi', 4.50, 2.50, 5, 'suklaa', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (44, 'mansikkadonitsi', 4.50, 2.50, 5, 'mansikka', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (45, 'tummaSuklaadonitsi', 4.50, 2.50, 5, 'tumma suklaa', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (46, 'valkosuklaadonitsi', 4.50, 2.50, 5, 'valkosuklaa', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (47, 'lakritsidonitsi', 4.50, 2.50, 5, 'kinuski', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (48, 'hasselpähkinädonitsi', 4.50, 2.50, 5, 'hasselpähkinä', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (49, 'salmiakkidonitsi', 4.50, 2.50, 5, 'salmiakki', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (50, 'vaniljadonitsi', 4.50, 2.50, 5, 'vanilja', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (51, 'vihreäKuuladonitsi', 4.50, 2.50, 5, 'vihreä kuula', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (52, 'kahvidonitsi', 4.50, 2.50, 5, 'kahvi', 'vadelmahillo', NULL);
+
+INSERT INTO tuote VALUES (53, 'kinuskidonitsi', 4.50, 2.50, 5, 'kinuski', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (54, 'suklaadonitsi', 4.50, 2.50, 5, 'suklaa', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (55, 'mansikkadonitsi', 4.50, 2.50, 5, 'mansikka', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (56, 'tummaSuklaadonitsi', 4.50, 2.50, 5, 'tumma suklaa', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (57, 'valkosuklaadonitsi', 4.50, 2.50, 5, 'valkosuklaa', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (58, 'lakritsidonitsi', 4.50, 2.50, 5, 'kinuski', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (59, 'hasselpähkinädonitsi', 4.50, 2.50, 5, 'hasselpähkinä', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (60, 'salmiakkidonitsi', 4.50, 2.50, 5, 'salmiakki', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (61, 'vaniljadonitsi', 4.50, 2.50, 5, 'vanilja', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (62, 'vihreäKuuladonitsi', 4.50, 2.50, 5, 'vihreä kuula', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (63, 'kahvidonitsi', 4.50, 2.50, 5, 'kahvi', 'vihreä kuula', NULL);
+
+INSERT INTO tuote VALUES (64, 'perinteinen setti', 12.50, 5, 4, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (65, 'erikoinen setti', 12.50, 5, 4, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (66, 'makuöveri setti', 12.50, 5, 4, NULL, NULL, NULL);
+
+INSERT INTO tuote VALUES (67, 'munkki', 3, 1, 6, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (68, 'suklaakeksi', 2, 0.50, 6, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (69, 'hasselpähkinäkeksi', 2, 0.50, 6, 'hasselpähkinä', NULL, NULL);
+INSERT INTO tuote VALUES (70, 'kahvikeksi', 2, 0.50, 6, 'kahvi', NULL, NULL);
+INSERT INTO tuote VALUES (71, 'rinkeli', 2.50, 1, 6, NULL, NULL, NULL);
+
+
+
+INSERT INTO setti VALUES ('perinteinen setti', 64, 10, 21, 46);
+INSERT INTO setti VALUES ('erikoinen setti', 65, 18, 26, 62);
+INSERT INTO setti VALUES ('makuöveri setti', 66, 17, 27, 35);
