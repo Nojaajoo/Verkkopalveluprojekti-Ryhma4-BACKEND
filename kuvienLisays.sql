@@ -151,7 +151,7 @@ SET kuva = "vihreakuulaVanilja.png"
 WHERE tuotenimi = "vihreäKuuladonitsi" AND taytemaku = "vaniljakreemi";
 
 UPDATE tuote
-SET kuva = " kahviVanilja.png"
+SET kuva = "kahviVanilja.png"
 WHERE tuotenimi = "kahvidonitsi" AND taytemaku = "vaniljakreemi";
 
 UPDATE tuote
@@ -269,3 +269,27 @@ WHERE tuotenimi = "hasselpähkinäkeksi";
 UPDATE tuote
 SET kuva = "keksiKahvi.png"
 WHERE tuotenimi = "kahvikeksi";
+
+UPDATE tuote
+SET kuva = "juomaTee.png"
+WHERE tuotenimi = "tee";
+
+UPDATE tuote
+SET kuva = "juomaKola.png"
+WHERE tuotenimi = "limppari" AND maku = "pepsi";
+
+UPDATE tuote
+SET kuva = "juomaJaffa.png"
+WHERE tuotenimi = "limppari" AND maku = "jaffa";
+
+UPDATE tuote
+SET kuva = "juomaMansikka.png"
+WHERE tuotenimi = "mehu" AND maku = "mansikka";
+
+UPDATE tuote
+SET kuva = "juomaPaaryna.png"
+WHERE tuotenimi = "mehu" AND maku = "paaryna";
+
+UPDATE tuote
+SET kuva = "juomaVesi.png"
+WHERE tuotenimi = "vesi";
