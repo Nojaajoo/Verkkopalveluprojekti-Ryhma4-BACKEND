@@ -28,7 +28,7 @@ try {
     .   "')";
 
     $asiakasId = executeInsert($db,$sql);
-    $sql = "insert into 'order' (asiakasID) values ($asiakasId)";
+    $sql = "insert into 'tilaus' (asiakasID) values ($asiakasId)";
     $tilausId = executeInsert($db,$sql);
 
     foreach ($cart as $product) {
