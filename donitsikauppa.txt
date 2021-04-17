@@ -97,8 +97,8 @@ INSERT INTO tuote VALUES (8, 'Mehu Päärynä', 3.90, 1.90, 1, 'päärynä', NUL
 INSERT INTO tuote VALUES (9, 'Kinuski Pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
 INSERT INTO tuote VALUES (10, 'Suklaa  Pikkudonitsi', 2.50, 1, 2, 'suklaa', NULL, NULL);
 INSERT INTO tuote VALUES (11, 'Mansikka  Pikkudonitsi', 2.50, 1, 2, 'mansikka', NULL, NULL);
-INSERT INTO tuote VALUES (12, 'Tumma suklaa  Pikkudonitsi', 2.50, 1, 2, 'tumma suklaa', NULL, NULL);
-INSERT INTO tuote VALUES (13, 'Valkosuklaa  Pikkudonitsi', 2.50, 1, 2, 'valkosuklaa', NULL, NULL);
+INSERT INTO tuote VALUES (12, 'Tumma suklaa Pikkudonitsi', 2.50, 1, 2, 'tumma suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (13, 'Valkosuklaa Pikkudonitsi', 2.50, 1, 2, 'valkosuklaa', NULL, NULL);
 INSERT INTO tuote VALUES (14, 'Lakritsi Pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
 INSERT INTO tuote VALUES (15, 'Hasselpähkinä Pikkudonitsi', 2.50, 1, 2, 'hasselpähkinä', NULL, NULL);
 INSERT INTO tuote VALUES (16, 'Salmiakki Pikkudonitsi', 2.50, 1, 2, 'salmiakki', NULL, NULL);
