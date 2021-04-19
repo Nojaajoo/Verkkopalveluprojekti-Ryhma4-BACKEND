@@ -1,295 +1,484 @@
--- phpMyAdmin SQL Dump
--- version 5.0.4
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: 26.03.2021 klo 12:13
--- Palvelimen versio: 10.4.17-MariaDB
--- PHP Version: 8.0.0
+/* CREATE DATABASE */
+DROP DATABASE if exists donitsikauppa;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+CREATE DATABASE donitsikauppa;
+
+USE donitsikauppa;
+
+/* Taulut */
+
+CREATE TABLE asiakas (
+asiakasID SMALLINT AUTO_INCREMENT,
+snimi CHAR(30) NOT NULL,
+enimi CHAR(30) NOT NULL,
+postinro CHAR(5), 
+postitmp CHAR(10), 
+puhnro INT,
+PRIMARY KEY (asiakasID),
+UNIQUE (snimi),
+UNIQUE (enimi)
+);
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+CREATE TABLE tilaus (
+tilausnro INTEGER NOT NULL,
+asiakasID SMALLINT(6) NOT NULL, 
+tilauspvm timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+tila CHAR(1),
+PRIMARY KEY (tilausnro),
+FOREIGN KEY (asiakasID) REFERENCES asiakas(asiakasID)
+);
 
---
--- Database: `donitsikauppa`
---
 
--- --------------------------------------------------------
+CREATE TABLE tuoteryhma (
+trnro SMALLINT,
+trnimi CHAR(25),
+CONSTRAINT tuoteryhma_pk PRIMARY KEY (trnro)
+) ;
 
---
--- Rakenne taululle `asiakas`
---
 
-CREATE TABLE `asiakas` (
-  `asiakasID` smallint(6) NOT NULL,
-  `snimi` char(30) NOT NULL,
-  `enimi` char(30) NOT NULL,
-  `postinro` char(5) DEFAULT NULL,
-  `postitmp` char(10) DEFAULT NULL,
-  `puhnro` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE tuote (
+tuotenro INTEGER,
+tuotenimi CHAR(30) NOT NULL,
+hinta DECIMAL(5,2),
+kustannus DECIMAL(5,2), 
+trnro SMALLINT NOT NULL,
+maku char(20),
+taytemaku char(20),
+kuva char(100),
+CONSTRAINT tuote_pk PRIMARY KEY (tuotenro),
+CONSTRAINT tuote_ryhma_fk FOREIGN KEY (trnro) 
+           REFERENCES tuoteryhma (trnro)
+);
 
--- --------------------------------------------------------
 
---
--- Rakenne taululle `setti`
---
+CREATE TABLE setti (
+setin_nimi char(30) NOT NULL,
+tuotenro integer NOT NULL,
+tuote1 integer NOT NULL,
+tuote2 integer NOT NULL,
+tuote3 integer NOT NULL,
+FOREIGN KEY(tuotenro) REFERENCES tuote(tuotenro),
+FOREIGN KEY(tuote1) REFERENCES tuote(tuotenro),
+FOREIGN KEY(tuote2) REFERENCES tuote(tuotenro),
+FOREIGN KEY(tuote3) REFERENCES tuote(tuotenro)
+);
 
-CREATE TABLE `setti` (
-  `setin_nimi` char(30) NOT NULL,
-  `tuotenro` int(11) NOT NULL,
-  `tuote1` int(11) NOT NULL,
-  `tuote2` int(11) NOT NULL,
-  `tuote3` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Vedos taulusta `setti`
---
+CREATE TABLE tilausrivi (
+tilausnro INTEGER NOT NULL,
+rivinro SMALLINT NOT NULL,
+tuotenro INTEGER, 
+kpl INTEGER,
+CONSTRAINT tilausrivi_pk PRIMARY KEY (tilausnro, rivinro),
+CONSTRAINT tilausrivi_tuote_fk FOREIGN KEY (tuotenro) 
+           REFERENCES tuote (tuotenro)
+);
 
-INSERT INTO `setti` (`setin_nimi`, `tuotenro`, `tuote1`, `tuote2`, `tuote3`) VALUES
-('perinteinen setti', 64, 10, 21, 46),
-('erikoinen setti', 65, 18, 26, 62),
-('makuöveri setti', 66, 17, 27, 35);
 
--- --------------------------------------------------------
+/* INSERT luontilauseet */
 
---
--- Rakenne taululle `tilaus`
---
 
-CREATE TABLE `tilaus` (
-  `tilausnro` int(11) NOT NULL,
-  `asiakasID` smallint(6) NOT NULL,
-  `tilauspvm` timestamp NOT NULL DEFAULT current_timestamp(),
-  `tila` char(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO tuoteryhma VALUES (1, 'Virvokkeet');
+INSERT INTO tuoteryhma VALUES (2, 'Pikkudonitsit');
+INSERT INTO tuoteryhma VALUES (3, 'Donitsit');
+INSERT INTO tuoteryhma VALUES (4, 'Donitsisetit');
+INSERT INTO tuoteryhma VALUES (5, 'Täytetyt donitsit');
+INSERT INTO tuoteryhma VALUES (6, 'Muut leivonnaiset');
 
--- --------------------------------------------------------
 
---
--- Rakenne taululle `tilausrivi`
---
 
-CREATE TABLE `tilausrivi` (
-  `tilausnro` int(11) NOT NULL,
-  `rivinro` smallint(6) NOT NULL,
-  `tuotenro` int(11) DEFAULT NULL,
-  `kpl` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO tuote VALUES (1, 'Kahvi', 4.90, 2.90, 1, 'vaalea', NULL, NULL);
+INSERT INTO tuote VALUES (2, 'Kahvi', 4.90, 2.90, 1, 'tumma', NULL, NULL);
+INSERT INTO tuote VALUES (3, 'Tee', 4.90, 2.90, 1, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (4, 'Pepsi', 5.90, 2.90, 1, 'pepsi', NULL, NULL);
+INSERT INTO tuote VALUES (5, 'Jaffa', 5.90, 2.90, 1, 'jaffa', NULL, NULL);
+INSERT INTO tuote VALUES (6, 'Vesi', 2.90, 1, 1, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (7, 'Mehu Mansikka', 3.90, 1.90, 1, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (8, 'Mehu Päärynä', 3.90, 1.90, 1, 'päärynä', NULL, NULL);
 
--- --------------------------------------------------------
+INSERT INTO tuote VALUES (9, 'Kinuski Pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (10, 'Suklaa Pikkudonitsi', 2.50, 1, 2, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (11, 'Mansikka Pikkudonitsi', 2.50, 1, 2, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (12, 'Tumma suklaa Pikkudonitsi', 2.50, 1, 2, 'tumma suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (13, 'Valkosuklaa Pikkudonitsi', 2.50, 1, 2, 'valkosuklaa', NULL, NULL);
+INSERT INTO tuote VALUES (14, 'Lakritsi Pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (15, 'Hasselpähkinä Pikkudonitsi', 2.50, 1, 2, 'hasselpähkinä', NULL, NULL);
+INSERT INTO tuote VALUES (16, 'Salmiakki Pikkudonitsi', 2.50, 1, 2, 'salmiakki', NULL, NULL);
+INSERT INTO tuote VALUES (17, 'Vanilja Pikkudonitsi', 2.50, 1, 2, 'vanilja', NULL, NULL);
+INSERT INTO tuote VALUES (18, 'Vihreä kuula Pikkudonitsi', 2.50, 1, 2, 'vihreä kuula', NULL, NULL);
+INSERT INTO tuote VALUES (19, 'Kahvi Pikkudonitsi', 2.50, 1, 2, 'kahvi', NULL, NULL);
 
---
--- Rakenne taululle `tuote`
---
+INSERT INTO tuote VALUES (20, 'Kinuski Donitsi', 3.50, 1.50, 3, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (21, 'Suklaa Donitsi', 3.50, 1.50, 3, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (22, 'Mansikka Donitsi', 3.50, 1.50, 3, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (23, 'Tumma suklaa Donitsi', 3.50, 1.50, 3, 'tumma suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (24, 'Valkosuklaa Donitsi', 3.50, 1.50, 3, 'valkosuklaa', NULL, NULL);
+INSERT INTO tuote VALUES (25, 'Lakritsi Donitsi', 3.50, 1.50, 3, 'kinuski', NULL, NULL);
+INSERT INTO tuote VALUES (26, 'Hasselpähkinä Donitsi', 3.50, 1.50, 3, 'hasselpähkinä', NULL, NULL);
+INSERT INTO tuote VALUES (27, 'Salmiakki Donitsi', 3.50, 1.50, 3, 'salmiakki', NULL, NULL);
+INSERT INTO tuote VALUES (28, 'Vanilja Donitsi', 3.50, 1.50, 3, 'vanilja', NULL, NULL);
+INSERT INTO tuote VALUES (29, 'Vihreä kuula Donitsi', 3.50, 1.50, 3, 'vihreä kuula', NULL, NULL);
+INSERT INTO tuote VALUES (30, 'Kahvi Donitsi', 3.50, 1.50, 3, 'kahvi', NULL, NULL);
 
-CREATE TABLE `tuote` (
-  `tuotenro` int(11) NOT NULL,
-  `tuotenimi` char(30) NOT NULL,
-  `hinta` decimal(5,2) DEFAULT NULL,
-  `kustannus` decimal(5,2) DEFAULT NULL,
-  `trnro` smallint(6) NOT NULL,
-  `maku` char(20) DEFAULT NULL,
-  `taytemaku` char(20) DEFAULT NULL,
-  `kuva` char(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO tuote VALUES (31, 'Kinuski Donitsi', 4.50, 2.50, 5, 'kinuski', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (32, 'Suklaa Donitsi', 4.50, 2.50, 5, 'suklaa', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (33, 'Mansikka Donitsi', 4.50, 2.50, 5, 'mansikka', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (34, 'Tumma suklaa Donitsi', 4.50, 2.50, 5, 'tumma suklaa', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (35, 'Valkosuklaa Donitsi', 4.50, 2.50, 5, 'valkosuklaa', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (36, 'Lakritsi Donitsi', 4.50, 2.50, 5, 'kinuski', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (37, 'Hasselpähkinä Donitsi', 4.50, 2.50, 5, 'hasselpähkinä', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (38, 'Salmiakki Donitsi', 4.50, 2.50, 5, 'salmiakki', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (39, 'Vanilja Donitsi', 4.50, 2.50, 5, 'vanilja', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (40, 'Vihreä kuula Donitsi', 4.50, 2.50, 5, 'vihreä kuula', 'vaniljakreemi', NULL);
+INSERT INTO tuote VALUES (41, 'Kahvi Donitsi', 4.50, 2.50, 5, 'kahvi', 'vaniljakreemi', NULL);
 
---
--- Vedos taulusta `tuote`
---
+INSERT INTO tuote VALUES (42, 'Kinuski Donitsi', 4.50, 2.50, 5, 'kinuski', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (43, 'Suklaa Donitsi', 4.50, 2.50, 5, 'suklaa', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (44, 'Mansikka Donitsi', 4.50, 2.50, 5, 'mansikka', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (45, 'Tumma suklaa Donitsi', 4.50, 2.50, 5, 'tumma suklaa', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (46, 'Valkosuklaa Donitsi', 4.50, 2.50, 5, 'valkosuklaa', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (47, 'Lakritsi Donitsi', 4.50, 2.50, 5, 'kinuski', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (48, 'Hasselpähkinä Donitsi', 4.50, 2.50, 5, 'hasselpähkinä', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (49, 'Salmiakki Donitsi', 4.50, 2.50, 5, 'salmiakki', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (50, 'Vanilja Donitsi', 4.50, 2.50, 5, 'vanilja', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (51, 'Vihreä kuula Donitsi', 4.50, 2.50, 5, 'vihreä kuula', 'vadelmahillo', NULL);
+INSERT INTO tuote VALUES (52, 'Kahvi Donitsi', 4.50, 2.50, 5, 'kahvi', 'vadelmahillo', NULL);
 
-INSERT INTO `tuote` (`tuotenro`, `tuotenimi`, `hinta`, `kustannus`, `trnro`, `maku`, `taytemaku`, `kuva`) VALUES
-(1, 'kahvi', '4.90', '2.90', 1, 'vaalea', NULL, NULL),
-(2, 'kahvi', '4.90', '2.90', 1, 'tumma', NULL, NULL),
-(3, 'tee', '4.90', '2.90', 1, NULL, NULL, NULL),
-(4, 'limppari', '5.90', '2.90', 1, 'pepsi', NULL, NULL),
-(5, 'limppari', '5.90', '2.90', 1, 'jaffa', NULL, NULL),
-(6, 'vesi', '2.90', '1.00', 1, NULL, NULL, NULL),
-(7, 'mehu', '3.90', '1.90', 1, 'mansikka', NULL, NULL),
-(8, 'mehu', '3.90', '1.90', 1, 'päärynä', NULL, NULL),
-(9, 'kinuski_pikkudonitsi', '2.50', '1.00', 2, 'kinuski', NULL, NULL),
-(10, 'suklaa_pikkudonitsi', '2.50', '1.00', 2, 'suklaa', NULL, NULL),
-(11, 'mansikka_pikkudonitsi', '2.50', '1.00', 2, 'mansikka', NULL, NULL),
-(12, 'tummaSuklaa_pikkudonitsi', '2.50', '1.00', 2, 'tumma suklaa', NULL, NULL),
-(13, 'valkosuklaa_pikkudonitsi', '2.50', '1.00', 2, 'valkosuklaa', NULL, NULL),
-(14, 'lakritsi_pikkudonitsi', '2.50', '1.00', 2, 'kinuski', NULL, NULL),
-(15, 'hasselpähkinä_pikkudonitsi', '2.50', '1.00', 2, 'hasselpähkinä', NULL, NULL),
-(16, 'salmiakki_pikkudonitsi', '2.50', '1.00', 2, 'salmiakki', NULL, NULL),
-(17, 'vanilja_pikkudonitsi', '2.50', '1.00', 2, 'vanilja', NULL, NULL),
-(18, 'vihreäKuula_pikkudonitsi', '2.50', '1.00', 2, 'vihreä kuula', NULL, NULL),
-(19, 'kahvi_pikkudonitsi', '2.50', '1.00', 2, 'kahvi', NULL, NULL),
-(20, 'kinuskidonitsi', '3.50', '1.50', 3, 'kinuski', NULL, NULL),
-(21, 'suklaadonitsi', '3.50', '1.50', 3, 'suklaa', NULL, NULL),
-(22, 'mansikkadonitsi', '3.50', '1.50', 3, 'mansikka', NULL, NULL),
-(23, 'tummaSuklaadonitsi', '3.50', '1.50', 3, 'tumma suklaa', NULL, NULL),
-(24, 'valkosuklaadonitsi', '3.50', '1.50', 3, 'valkosuklaa', NULL, NULL),
-(25, 'lakritsidonitsi', '3.50', '1.50', 3, 'kinuski', NULL, NULL),
-(26, 'hasselpähkinädonitsi', '3.50', '1.50', 3, 'hasselpähkinä', NULL, NULL),
-(27, 'salmiakkidonitsi', '3.50', '1.50', 3, 'salmiakki', NULL, NULL),
-(28, 'vaniljadonitsi', '3.50', '1.50', 3, 'vanilja', NULL, NULL),
-(29, 'vihreäKuuladonitsi', '3.50', '1.50', 3, 'vihreä kuula', NULL, NULL),
-(30, 'kahvidonitsi', '3.50', '1.50', 3, 'kahvi', NULL, NULL),
-(31, 'kinuskidonitsi', '4.50', '2.50', 5, 'kinuski', 'vaniljakreemi', NULL),
-(32, 'suklaadonitsi', '4.50', '2.50', 5, 'suklaa', 'vaniljakreemi', NULL),
-(33, 'mansikkadonitsi', '4.50', '2.50', 5, 'mansikka', 'vaniljakreemi', NULL),
-(34, 'tummaSuklaadonitsi', '4.50', '2.50', 5, 'tumma suklaa', 'vaniljakreemi', NULL),
-(35, 'valkosuklaadonitsi', '4.50', '2.50', 5, 'valkosuklaa', 'vaniljakreemi', NULL),
-(36, 'lakritsidonitsi', '4.50', '2.50', 5, 'kinuski', 'vaniljakreemi', NULL),
-(37, 'hasselpähkinädonitsi', '4.50', '2.50', 5, 'hasselpähkinä', 'vaniljakreemi', NULL),
-(38, 'salmiakkidonitsi', '4.50', '2.50', 5, 'salmiakki', 'vaniljakreemi', NULL),
-(39, 'vaniljadonitsi', '4.50', '2.50', 5, 'vanilja', 'vaniljakreemi', NULL),
-(40, 'vihreäKuuladonitsi', '4.50', '2.50', 5, 'vihreä kuula', 'vaniljakreemi', NULL),
-(41, 'kahvidonitsi', '4.50', '2.50', 5, 'kahvi', 'vaniljakreemi', NULL),
-(42, 'kinuskidonitsi', '4.50', '2.50', 5, 'kinuski', 'vadelmahillo', NULL),
-(43, 'suklaadonitsi', '4.50', '2.50', 5, 'suklaa', 'vadelmahillo', NULL),
-(44, 'mansikkadonitsi', '4.50', '2.50', 5, 'mansikka', 'vadelmahillo', NULL),
-(45, 'tummaSuklaadonitsi', '4.50', '2.50', 5, 'tumma suklaa', 'vadelmahillo', NULL),
-(46, 'valkosuklaadonitsi', '4.50', '2.50', 5, 'valkosuklaa', 'vadelmahillo', NULL),
-(47, 'lakritsidonitsi', '4.50', '2.50', 5, 'kinuski', 'vadelmahillo', NULL),
-(48, 'hasselpähkinädonitsi', '4.50', '2.50', 5, 'hasselpähkinä', 'vadelmahillo', NULL),
-(49, 'salmiakkidonitsi', '4.50', '2.50', 5, 'salmiakki', 'vadelmahillo', NULL),
-(50, 'vaniljadonitsi', '4.50', '2.50', 5, 'vanilja', 'vadelmahillo', NULL),
-(51, 'vihreäKuuladonitsi', '4.50', '2.50', 5, 'vihreä kuula', 'vadelmahillo', NULL),
-(52, 'kahvidonitsi', '4.50', '2.50', 5, 'kahvi', 'vadelmahillo', NULL),
-(53, 'kinuskidonitsi', '4.50', '2.50', 5, 'kinuski', 'vihreä kuula', NULL),
-(54, 'suklaadonitsi', '4.50', '2.50', 5, 'suklaa', 'vihreä kuula', NULL),
-(55, 'mansikkadonitsi', '4.50', '2.50', 5, 'mansikka', 'vihreä kuula', NULL),
-(56, 'tummaSuklaadonitsi', '4.50', '2.50', 5, 'tumma suklaa', 'vihreä kuula', NULL),
-(57, 'valkosuklaadonitsi', '4.50', '2.50', 5, 'valkosuklaa', 'vihreä kuula', NULL),
-(58, 'lakritsidonitsi', '4.50', '2.50', 5, 'kinuski', 'vihreä kuula', NULL),
-(59, 'hasselpähkinädonitsi', '4.50', '2.50', 5, 'hasselpähkinä', 'vihreä kuula', NULL),
-(60, 'salmiakkidonitsi', '4.50', '2.50', 5, 'salmiakki', 'vihreä kuula', NULL),
-(61, 'vaniljadonitsi', '4.50', '2.50', 5, 'vanilja', 'vihreä kuula', NULL),
-(62, 'vihreäKuuladonitsi', '4.50', '2.50', 5, 'vihreä kuula', 'vihreä kuula', NULL),
-(63, 'kahvidonitsi', '4.50', '2.50', 5, 'kahvi', 'vihreä kuula', NULL),
-(64, 'perinteinen setti', '12.50', '5.00', 4, NULL, NULL, NULL),
-(65, 'erikoinen setti', '12.50', '5.00', 4, NULL, NULL, NULL),
-(66, 'makuöveri setti', '12.50', '5.00', 4, NULL, NULL, NULL),
-(67, 'munkki', '3.00', '1.00', 6, NULL, NULL, NULL),
-(68, 'suklaakeksi', '2.00', '0.50', 6, 'suklaa', NULL, NULL),
-(69, 'hasselpähkinäkeksi', '2.00', '0.50', 6, 'hasselpähkinä', NULL, NULL),
-(70, 'kahvikeksi', '2.00', '0.50', 6, 'kahvi', NULL, NULL),
-(71, 'rinkeli', '2.50', '1.00', 6, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (53, 'Kinuski Donitsi', 4.50, 2.50, 5, 'kinuski', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (54, 'Suklaa Donitsi', 4.50, 2.50, 5, 'suklaa', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (55, 'Mansikka Donitsi', 4.50, 2.50, 5, 'mansikka', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (56, 'Tumma suklaa Donitsi', 4.50, 2.50, 5, 'tumma suklaa', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (57, 'Valkosuklaa Donitsi', 4.50, 2.50, 5, 'valkosuklaa', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (58, 'Lakritsi Donitsi', 4.50, 2.50, 5, 'kinuski', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (59, 'Hasselpähkinä Donitsi', 4.50, 2.50, 5, 'hasselpähkinä', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (60, 'Salmiakki Donitsi', 4.50, 2.50, 5, 'salmiakki', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (61, 'Vanilja Donitsi', 4.50, 2.50, 5, 'vanilja', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (62, 'Vihreä kuula Donitsi', 4.50, 2.50, 5, 'vihreä kuula', 'vihreä kuula', NULL);
+INSERT INTO tuote VALUES (63, 'Kahvi Donitsi', 4.50, 2.50, 5, 'kahvi', 'vihreä kuula', NULL);
 
--- --------------------------------------------------------
+INSERT INTO tuote VALUES (64, 'Perinteinen Setti', 12.50, 5, 4, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (65, 'Erikoinen Setti', 12.50, 5, 4, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (66, 'Makuöveri Setti', 12.50, 5, 4, NULL, NULL, NULL);
 
---
--- Rakenne taululle `tuoteryhma`
---
+INSERT INTO tuote VALUES (67, 'Munkki', 3, 1, 6, NULL, NULL, NULL);
+INSERT INTO tuote VALUES (68, 'Suklaa Keksi', 2, 0.50, 6, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (69, 'Hasselpähkinä Keksi', 2, 0.50, 6, 'hasselpähkinä', NULL, NULL);
+INSERT INTO tuote VALUES (70, 'Kahvi Keksi', 2, 0.50, 6, 'kahvi', NULL, NULL);
+INSERT INTO tuote VALUES (71, 'Rinkeli', 2.50, 1, 6, NULL, NULL, NULL);
 
-CREATE TABLE `tuoteryhma` (
-  `trnro` smallint(6) NOT NULL,
-  `trnimi` char(25) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Vedos taulusta `tuoteryhma`
---
 
-INSERT INTO `tuoteryhma` (`trnro`, `trnimi`) VALUES
-(1, 'Virvokkeet'),
-(2, 'Pikkudonitsit'),
-(3, 'Donitsit'),
-(4, 'Donitsisetit'),
-(5, 'Täytetyt donitsit'),
-(6, 'Muut leivonnaiset');
+INSERT INTO setti VALUES ('Perinteinen Setti', 64, 10, 21, 46);
+INSERT INTO setti VALUES ('Rrikoinen Setti', 65, 18, 26, 62);
+INSERT INTO setti VALUES ('Makuöveri Setti', 66, 17, 27, 35);
 
---
--- Indexes for dumped tables
---
+/* Kuvien Lisäys */
 
---
--- Indexes for table `asiakas`
---
-ALTER TABLE `asiakas`
-  ADD PRIMARY KEY (`asiakasID`);
+UPDATE tuote
+SET kuva = "munkki.png"
+WHERE tuotenimi = "Munkki";
 
---
--- Indexes for table `setti`
---
-ALTER TABLE `setti`
-  ADD KEY `tuotenro` (`tuotenro`),
-  ADD KEY `tuote1` (`tuote1`),
-  ADD KEY `tuote2` (`tuote2`),
-  ADD KEY `tuote3` (`tuote3`);
+UPDATE tuote
+SET kuva = "pikkuKinuski.png"
+WHERE tuotenimi = "Kinuski Pikkudonitsi";
 
---
--- Indexes for table `tilaus`
---
-ALTER TABLE `tilaus`
-  ADD PRIMARY KEY (`tilausnro`),
-  ADD KEY `tilaus_asiakas_fk` (`asiakasID`);
+UPDATE tuote
+SET kuva = "pikkuSuklaa.png"
+WHERE tuotenimi = "Suklaa Pikkudonitsi";
 
---
--- Indexes for table `tilausrivi`
---
-ALTER TABLE `tilausrivi`
-  ADD PRIMARY KEY (`tilausnro`,`rivinro`),
-  ADD KEY `tilausrivi_tuote_fk` (`tuotenro`);
+UPDATE tuote
+SET kuva = "pikkuMansikka.png"
+WHERE tuotenimi = "Mansikka Pikkudonitsi";
 
---
--- Indexes for table `tuote`
---
-ALTER TABLE `tuote`
-  ADD PRIMARY KEY (`tuotenro`),
-  ADD KEY `tuote_ryhma_fk` (`trnro`);
+UPDATE tuote
+SET kuva = "pikkuTummasuklaa.png"
+WHERE tuotenimi = "Tumma suklaa Pikkudonitsi";
 
---
--- Indexes for table `tuoteryhma`
---
-ALTER TABLE `tuoteryhma`
-  ADD PRIMARY KEY (`trnro`);
+UPDATE tuote
+SET kuva = "pikkuValkosuklaa.png"
+WHERE tuotenimi = "Valkosuklaa Pikkudonitsi";
 
---
--- AUTO_INCREMENT for dumped tables
---
+UPDATE tuote
+SET kuva = "pikkuLakritsi.png"
+WHERE tuotenimi = "Lakritsi Pikkudonitsi";
+-- korjataan väärä maku
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Pikkudonitsi";
 
---
--- AUTO_INCREMENT for table `asiakas`
---
-ALTER TABLE `asiakas`
-  MODIFY `asiakasID` smallint(6) NOT NULL AUTO_INCREMENT;
+UPDATE tuote
+SET kuva = "pikkuHasselpahkina.png"
+WHERE tuotenimi = "Hasselpähkinä Pikkudonitsi";
 
---
--- Rajoitteet vedostauluille
---
+UPDATE tuote
+SET kuva = "pikkuSalmiakki.png"
+WHERE tuotenimi = "Salmiakki Pikkudonitsi";
 
---
--- Rajoitteet taululle `setti`
---
-ALTER TABLE `setti`
-  ADD CONSTRAINT `setti_ibfk_1` FOREIGN KEY (`tuotenro`) REFERENCES `tuote` (`tuotenro`),
-  ADD CONSTRAINT `setti_ibfk_2` FOREIGN KEY (`tuote1`) REFERENCES `tuote` (`tuotenro`),
-  ADD CONSTRAINT `setti_ibfk_3` FOREIGN KEY (`tuote2`) REFERENCES `tuote` (`tuotenro`),
-  ADD CONSTRAINT `setti_ibfk_4` FOREIGN KEY (`tuote3`) REFERENCES `tuote` (`tuotenro`);
+UPDATE tuote
+SET kuva = "pikkuVanilja.png"
+WHERE tuotenimi = "Vanilja Pikkudonitsi";
 
---
--- Rajoitteet taululle `tilaus`
---
-ALTER TABLE `tilaus`
-  ADD CONSTRAINT `tilaus_asiakas_fk` FOREIGN KEY (`asiakasID`) REFERENCES `asiakas` (`asiakasID`);
+UPDATE tuote
+SET kuva = "pikkuVihreakuula.png"
+WHERE tuotenimi = "Vihreä kuula Pikkudonitsi";
 
---
--- Rajoitteet taululle `tilausrivi`
---
-ALTER TABLE `tilausrivi`
-  ADD CONSTRAINT `tilausrivi_tuote_fk` FOREIGN KEY (`tuotenro`) REFERENCES `tuote` (`tuotenro`);
+UPDATE tuote
+SET kuva = "pikkuKahvi.png"
+WHERE tuotenimi = "Kahvi Pikkudonitsi";
 
---
--- Rajoitteet taululle `tuote`
---
-ALTER TABLE `tuote`
-  ADD CONSTRAINT `tuote_ryhma_fk` FOREIGN KEY (`trnro`) REFERENCES `tuoteryhma` (`trnro`);
-COMMIT;
+UPDATE tuote
+SET kuva = "juomaKahviTumma.png"
+WHERE tuotenimi = "Kahvi" AND maku = "tumma";
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+UPDATE tuote
+SET kuva = "juomaKahviVaalea.png"
+WHERE tuotenimi = "Kahvi" AND maku = "vaalea";
+
+UPDATE tuote
+SET kuva = "kinuskiDonitsi.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "suklaaDonitsi.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "mansikkaDonitsi.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "tummasuklaaDonitsi.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "valkosuklaaDonitsi.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "lakritsiDonitsi.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku IS NULL;
+-- korjataan maku
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "hasselpahkinaDonitsi.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "salmiakkiDonitsi.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "vaniljaDonitsi.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "vihreakuulaDonitsi.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "kahviDonitsi.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "kinuskiVanilja.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "suklaaVanilja.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "mansikkaVanilja.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "tummasuklaaVanilja.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "valkosuklaaVanilja.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "lakritsiVanilja.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vaniljakreemi";
+-- korjaus
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "hasselpahkinaVanilja.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "salmiakkiVanilja.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "vaniljaVanilja.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "vihreakuulaVanilja.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "kahviVanilja.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "kinuskiVadelma.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "suklaaVadelma.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "mansikkaVadelma.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "tummasuklaaVadelma.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "valkosuklaaVadelma.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "lakritsiVadelma.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vadelmahillo";
+-- korjataan
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "hasselpahkinaVadelma.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "salmiakkiVadelma.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "vaniljaVadelma.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "vihreakuulaVadelma.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "kahviVadelma.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "kinuskiVihrea.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "suklaaVihrea.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "mansikkaVihrea.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "tummasuklaaVihrea.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "valkosuklaaVihrea.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "lakritsiVihrea.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vihreä kuula";
+-- korjataan
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "hasselpahkinaVihrea.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "salmiakkiVihrea.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "vaniljaVihrea.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "vihreakuulaVihrea.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "kahviVihrea.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "setti.png"
+WHERE trnro = 4;
+
+UPDATE tuote
+SET kuva = "rinkeli.png"
+WHERE tuotenimi = "Rinkeli";
+
+UPDATE tuote
+SET kuva = "keksiSuklaa.png"
+WHERE tuotenimi = "Suklaa Keksi";
+
+UPDATE tuote
+SET kuva = "keksiHasselpahkina.png"
+WHERE tuotenimi = "Hasselpähkinä Keksi";
+
+UPDATE tuote
+SET kuva = "keksiKahvi.png"
+WHERE tuotenimi = "Kahvi Keksi";
+
+UPDATE tuote
+SET kuva = "juomaTee.png"
+WHERE tuotenimi = "Tee";
+
+UPDATE tuote
+SET kuva = "juomaKola.png"
+WHERE tuotenimi = "Pepsi" AND maku = "pepsi";
+
+UPDATE tuote
+SET kuva = "juomaJaffa.png"
+WHERE tuotenimi = "Jaffa" AND maku = "jaffa";
+
+UPDATE tuote
+SET kuva = "juomaMansikka.png"
+WHERE tuotenimi = "Mehu Mansikka" AND maku = "mansikka";
+
+UPDATE tuote
+SET kuva = "juomaPaaryna.png"
+WHERE tuotenimi = "Mehu Päärynä" AND maku = "päärynä";
+
+UPDATE tuote
+SET kuva = "juomaVesi.png"
+WHERE tuotenimi = "Vesi";
+
+/* Järjestysnro */
+
+ALTER TABLE tuoteryhma ADD jarjestusNro INT;
+
+
+UPDATE tuoteryhma set jarjestusNro = 1 WHERE trnro = 3;
+UPDATE tuoteryhma set jarjestusNro = 2 WHERE trnro = 2;
+UPDATE tuoteryhma set jarjestusNro = 3 WHERE trnro = 5;
+UPDATE tuoteryhma set jarjestusNro = 4 WHERE trnro = 4;
+UPDATE tuoteryhma set jarjestusNro = 5 WHERE trnro = 6;
+UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1
