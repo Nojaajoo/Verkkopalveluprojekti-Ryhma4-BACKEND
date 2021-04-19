@@ -42,7 +42,7 @@ kustannus DECIMAL(5,2),
 trnro SMALLINT NOT NULL,
 maku char(20),
 taytemaku char(20),
-kuva char(20),
+kuva char(100),
 CONSTRAINT tuote_pk PRIMARY KEY (tuotenro),
 CONSTRAINT tuote_ryhma_fk FOREIGN KEY (trnro) 
            REFERENCES tuoteryhma (trnro)
@@ -95,8 +95,8 @@ INSERT INTO tuote VALUES (7, 'Mehu Mansikka', 3.90, 1.90, 1, 'mansikka', NULL, N
 INSERT INTO tuote VALUES (8, 'Mehu Päärynä', 3.90, 1.90, 1, 'päärynä', NULL, NULL);
 
 INSERT INTO tuote VALUES (9, 'Kinuski Pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
-INSERT INTO tuote VALUES (10, 'Suklaa  Pikkudonitsi', 2.50, 1, 2, 'suklaa', NULL, NULL);
-INSERT INTO tuote VALUES (11, 'Mansikka  Pikkudonitsi', 2.50, 1, 2, 'mansikka', NULL, NULL);
+INSERT INTO tuote VALUES (10, 'Suklaa Pikkudonitsi', 2.50, 1, 2, 'suklaa', NULL, NULL);
+INSERT INTO tuote VALUES (11, 'Mansikka Pikkudonitsi', 2.50, 1, 2, 'mansikka', NULL, NULL);
 INSERT INTO tuote VALUES (12, 'Tumma suklaa Pikkudonitsi', 2.50, 1, 2, 'tumma suklaa', NULL, NULL);
 INSERT INTO tuote VALUES (13, 'Valkosuklaa Pikkudonitsi', 2.50, 1, 2, 'valkosuklaa', NULL, NULL);
 INSERT INTO tuote VALUES (14, 'Lakritsi Pikkudonitsi', 2.50, 1, 2, 'kinuski', NULL, NULL);
@@ -169,3 +169,313 @@ INSERT INTO tuote VALUES (71, 'Rinkeli', 2.50, 1, 6, NULL, NULL, NULL);
 INSERT INTO setti VALUES ('Perinteinen Setti', 64, 10, 21, 46);
 INSERT INTO setti VALUES ('Rrikoinen Setti', 65, 18, 26, 62);
 INSERT INTO setti VALUES ('Makuöveri Setti', 66, 17, 27, 35);
+
+/* Kuvien Lisäys */
+
+UPDATE tuote
+SET kuva = "munkki.png"
+WHERE tuotenimi = "Munkki";
+
+UPDATE tuote
+SET kuva = "pikkuKinuski.png"
+WHERE tuotenimi = "Kinuski Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuSuklaa.png"
+WHERE tuotenimi = "Suklaa Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuMansikka.png"
+WHERE tuotenimi = "Mansikka Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuTummasuklaa.png"
+WHERE tuotenimi = "Tumma suklaa Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuValkosuklaa.png"
+WHERE tuotenimi = "Valkosuklaa Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuLakritsi.png"
+WHERE tuotenimi = "Lakritsi Pikkudonitsi";
+-- korjataan väärä maku
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuHasselpahkina.png"
+WHERE tuotenimi = "Hasselpähkinä Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuSalmiakki.png"
+WHERE tuotenimi = "Salmiakki Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuVanilja.png"
+WHERE tuotenimi = "Vanilja Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuVihreakuula.png"
+WHERE tuotenimi = "Vihreä kuula Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "pikkuKahvi.png"
+WHERE tuotenimi = "Kahvi Pikkudonitsi";
+
+UPDATE tuote
+SET kuva = "juomaKahviTumma.png"
+WHERE tuotenimi = "Kahvi" AND maku = "tumma";
+
+UPDATE tuote
+SET kuva = "juomaKahviVaalea.png"
+WHERE tuotenimi = "Kahvi" AND maku = "vaalea";
+
+UPDATE tuote
+SET kuva = "kinuskiDonitsi.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "suklaaDonitsi.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "mansikkaDonitsi.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "tummasuklaaDonitsi.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "valkosuklaaDonitsi.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "lakritsiDonitsi.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku IS NULL;
+-- korjataan maku
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "hasselpahkinaDonitsi.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "salmiakkiDonitsi.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "vaniljaDonitsi.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "vihreakuulaDonitsi.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "kahviDonitsi.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku IS NULL;
+
+UPDATE tuote
+SET kuva = "kinuskiVanilja.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "suklaaVanilja.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "mansikkaVanilja.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "tummasuklaaVanilja.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "valkosuklaaVanilja.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "lakritsiVanilja.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vaniljakreemi";
+-- korjaus
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "hasselpahkinaVanilja.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "salmiakkiVanilja.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "vaniljaVanilja.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "vihreakuulaVanilja.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "kahviVanilja.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku = "vaniljakreemi";
+
+UPDATE tuote
+SET kuva = "kinuskiVadelma.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "suklaaVadelma.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "mansikkaVadelma.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "tummasuklaaVadelma.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "valkosuklaaVadelma.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "lakritsiVadelma.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vadelmahillo";
+-- korjataan
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "hasselpahkinaVadelma.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "salmiakkiVadelma.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "vaniljaVadelma.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "vihreakuulaVadelma.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "kahviVadelma.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku = "vadelmahillo";
+
+UPDATE tuote
+SET kuva = "kinuskiVihrea.png"
+WHERE tuotenimi = "Kinuski Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "suklaaVihrea.png"
+WHERE tuotenimi = "Suklaa Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "mansikkaVihrea.png"
+WHERE tuotenimi = "Mansikka Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "tummasuklaaVihrea.png"
+WHERE tuotenimi = "Tumma suklaa Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "valkosuklaaVihrea.png"
+WHERE tuotenimi = "Valkosuklaa Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "lakritsiVihrea.png"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vihreä kuula";
+-- korjataan
+UPDATE tuote
+SET maku = "lakritsi"
+WHERE tuotenimi = "Lakritsi Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "hasselpahkinaVihrea.png"
+WHERE tuotenimi = "Hasselpähkinä Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "salmiakkiVihrea.png"
+WHERE tuotenimi = "Salmiakki Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "vaniljaVihrea.png"
+WHERE tuotenimi = "Vanilja Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "vihreakuulaVihrea.png"
+WHERE tuotenimi = "Vihreä kuula Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "kahviVihrea.png"
+WHERE tuotenimi = "Kahvi Donitsi" AND taytemaku = "vihreä kuula";
+
+UPDATE tuote
+SET kuva = "setti.png"
+WHERE trnro = 4;
+
+UPDATE tuote
+SET kuva = "rinkeli.png"
+WHERE tuotenimi = "Rinkeli";
+
+UPDATE tuote
+SET kuva = "keksiSuklaa.png"
+WHERE tuotenimi = "Suklaa Keksi";
+
+UPDATE tuote
+SET kuva = "keksiHasselpahkina.png"
+WHERE tuotenimi = "Hasselpähkinä Keksi";
+
+UPDATE tuote
+SET kuva = "keksiKahvi.png"
+WHERE tuotenimi = "Kahvi Keksi";
+
+UPDATE tuote
+SET kuva = "juomaTee.png"
+WHERE tuotenimi = "Tee";
+
+UPDATE tuote
+SET kuva = "juomaKola.png"
+WHERE tuotenimi = "Pepsi" AND maku = "pepsi";
+
+UPDATE tuote
+SET kuva = "juomaJaffa.png"
+WHERE tuotenimi = "Jaffa" AND maku = "jaffa";
+
+UPDATE tuote
+SET kuva = "juomaMansikka.png"
+WHERE tuotenimi = "Mehu Mansikka" AND maku = "mansikka";
+
+UPDATE tuote
+SET kuva = "juomaPaaryna.png"
+WHERE tuotenimi = "Mehu Päärynä" AND maku = "päärynä";
+
+UPDATE tuote
+SET kuva = "juomaVesi.png"
+WHERE tuotenimi = "Vesi";
+
+/* Järjestysnro */
+
+ALTER TABLE tuoteryhma ADD jarjestusNro INT;
+
+
+UPDATE tuoteryhma set jarjestusNro = 1 WHERE trnro = 3;
+UPDATE tuoteryhma set jarjestusNro = 2 WHERE trnro = 2;
+UPDATE tuoteryhma set jarjestusNro = 3 WHERE trnro = 5;
+UPDATE tuoteryhma set jarjestusNro = 4 WHERE trnro = 4;
+UPDATE tuoteryhma set jarjestusNro = 5 WHERE trnro = 6;
+UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1

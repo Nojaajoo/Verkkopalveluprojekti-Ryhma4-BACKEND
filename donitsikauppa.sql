@@ -293,13 +293,3 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-ALTER TABLE tuoteryhma ADD jarjestusNro INT;
-
-
-UPDATE tuoteryhma set jarjestusNro = 1 WHERE trnro = 3;
-UPDATE tuoteryhma set jarjestusNro = 2 WHERE trnro = 2;
-UPDATE tuoteryhma set jarjestusNro = 3 WHERE trnro = 5;
-UPDATE tuoteryhma set jarjestusNro = 4 WHERE trnro = 4;
-UPDATE tuoteryhma set jarjestusNro = 5 WHERE trnro = 6;
-UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1
