@@ -8,6 +8,7 @@ CREATE TABLE asiakas (
 asiakasID SMALLINT AUTO_INCREMENT,
 snimi CHAR(30) NOT NULL,
 enimi CHAR(30) NOT NULL,
+osoite CHAR(50),
 postinro CHAR(5), 
 postitmp CHAR(10), 
 puhnro INT,
