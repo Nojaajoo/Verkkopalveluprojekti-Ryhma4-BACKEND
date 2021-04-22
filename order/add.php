@@ -7,7 +7,7 @@ $db = null;
 $input = json_decode(file_get_contents('PHP://input'));
 $snimi = filter_var($input->snimi,FILTER_SANITIZE_STRING);
 $enimi = filter_var($input->enimi,FILTER_SANITIZE_STRING);
-// $osoite = filter_var($input->osoite,FILTER_SANITIZE_STRING);
+$osoite = filter_var($input->osoite,FILTER_SANITIZE_STRING);
 $postinro = filter_var($input->postinro,FILTER_SANITIZE_STRING);
 $postitmp = filter_var($input->postitmp,FILTER_SANITIZE_STRING);
 $puhnro = filter_var($input->puhnro,FILTER_SANITIZE_STRING);
@@ -21,7 +21,7 @@ try {
     ('" . 
         filter_var($enimi,FILTER_SANITIZE_STRING) . "','" . 
         filter_var($snimi,FILTER_SANITIZE_STRING) . "','" . 
-        // filter_var($osoite,FILTER_SANITIZE_STRING) . "','" . 
+        filter_var($osoite,FILTER_SANITIZE_STRING) . "','" . 
         filter_var($postinro,FILTER_SANITIZE_STRING) . "','" . 
         filter_var($postitmp,FILTER_SANITIZE_STRING) . "','" . 
         filter_var($puh,FILTER_SANITIZE_STRING)
