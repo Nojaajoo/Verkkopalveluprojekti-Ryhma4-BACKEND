@@ -19,7 +19,7 @@ UNIQUE (enimi)
 
 
 CREATE TABLE tilaus (
-tilausnro INTEGER NOT NULL,
+tilausnro INTEGER NOT NULL  AUTO_INCREMENT,
 asiakasID SMALLINT(6) NOT NULL, 
 tilauspvm timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 tila CHAR(1),
@@ -67,10 +67,7 @@ CREATE TABLE tilausrivi (
 tilausnro INTEGER NOT NULL,
 rivinro SMALLINT NOT NULL,
 tuotenro INTEGER, 
-kpl INTEGER,
-CONSTRAINT tilausrivi_pk PRIMARY KEY (tilausnro, rivinro),
-CONSTRAINT tilausrivi_tuote_fk FOREIGN KEY (tuotenro) 
-           REFERENCES tuote (tuotenro)
+kpl INTEGER
 );
 
 
