@@ -67,7 +67,7 @@ CREATE TABLE tilausrivi (
 tilausnro INTEGER NOT NULL,
 rivinro SMALLINT NOT NULL,
 tuotenro INTEGER, 
-kpl INTEGER,
+kpl INTEGER
 );
 
 
