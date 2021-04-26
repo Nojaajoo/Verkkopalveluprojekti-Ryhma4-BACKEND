@@ -482,4 +482,16 @@ UPDATE tuoteryhma set jarjestusNro = 2 WHERE trnro = 2;
 UPDATE tuoteryhma set jarjestusNro = 3 WHERE trnro = 5;
 UPDATE tuoteryhma set jarjestusNro = 4 WHERE trnro = 4;
 UPDATE tuoteryhma set jarjestusNro = 5 WHERE trnro = 6;
-UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1
+UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1;
+
+-- kirjautuminen
+create table `user` (
+    id int primary key auto_increment,
+    fname varchar(50) not null,
+    lname varchar(100) not null,
+    username varchar(50) not null,
+    password varchar(255) not null
+);
+
+insert into user(fname, lname, username, password)
+values ('Donitsi','Admin','donitsiadmin','$2y$10$oIHqL28t.hxX4YG.siZRc.YO/oHKR4wIpC/XLGS5LFlFS8RKN/.rm')
