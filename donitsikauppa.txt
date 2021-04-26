@@ -486,3 +486,6 @@ create table `user` (
     username varchar(50) not null,
     password varchar(255) not null
 )
+
+insert into user(fname, lname, username, password)
+values ('Donitsi','Admin','donitsiadmin','$2y$10$oIHqL28t.hxX4YG.siZRc.YO/oHKR4wIpC/XLGS5LFlFS8RKN/.rm')
