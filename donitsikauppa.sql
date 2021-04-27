@@ -482,4 +482,16 @@ UPDATE tuoteryhma set jarjestusNro = 2 WHERE trnro = 2;
 UPDATE tuoteryhma set jarjestusNro = 3 WHERE trnro = 5;
 UPDATE tuoteryhma set jarjestusNro = 4 WHERE trnro = 4;
 UPDATE tuoteryhma set jarjestusNro = 5 WHERE trnro = 6;
-UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1
+UPDATE tuoteryhma set jarjestusNro = 6 WHERE trnro = 1;
+
+
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `fname` varchar(50) NOT NULL,
+  `lname` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `user` (`id`, `fname`, `lname`, `username`, `password`) VALUES
+(2, 'Donitsi', 'Admin', 'donitsiadmin', '$2y$10$.gfTz6MmRWyjpVS.u48s8O2hWpuPfNecbiI5apM1uhcFielrK86n2');
